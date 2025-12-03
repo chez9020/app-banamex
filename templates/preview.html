@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Previsualización</title>
+  <style>
+    /* DEFINIR LAS FUENTES PERSONALIZADAS */
+    @font-face {
+      font-family: 'BanamexDisplayBold';
+      src: url("{{ url_for('static', filename='fonts/BanamexDisplay-Bold.otf') }}") format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'BanamexDisplay';
+      src: url("{{ url_for('static', filename='fonts/BanamexDisplay-Regular.otf') }}") format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'BanamexText';
+      src: url("{{ url_for('static', filename='fonts/BanamexText-Regular.otf') }}") format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;overflow:hidden}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#0f4650;color:#fff}
+
+    .hero{
+      position:relative;width:100vw;height:100vh;
+      display:flex;justify-content:center;align-items:center;overflow:hidden;
+    }
+    .frame{
+      position:relative;width:100vw;height:100vh;max-width:100vw;aspect-ratio:9/16;
+      background:url("{{ url_for('static', filename='images/Pantallas_previsualizar.png') }}") center/cover no-repeat;
+    }
+
+    /* Área donde debe ir la foto, calculada en % sobre 1080x1920 */
+    .photo-area{
+      position:absolute;
+      left: 5.8889%;      /* 96 / 1080 */
+      top:  15.0833%;     /* 424 / 1920 */
+      width: 87.4074%;    /* 944 / 1080 */
+      height:68.3333%;    /* 1312 / 1920 */
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    /* Tamaño de la foto: ocupa el área exacta sin salirse */
+    .photo-area img{
+      width:92%;
+      height:92%;
+      object-fit:contain;   /* o 'cover' si prefieres llenar aún más */
+      display:block;
+      pointer-events:auto;
+    }
+
+
+    /* CONTENEDOR DE BOTONES CENTRADO BAJO LA TARJETA */
+    .actions{
+      position:absolute;
+      left: 5.8889%;                              /* mismo left que la tarjeta */
+      top:  calc(15.0833% + 68.3333% + 17px);      /* debajo de la tarjeta */
+      width: 87.4074%;                              /* mismo ancho que la tarjeta */
+      display:flex;
+      justify-content:center;                     /* <- a la derecha */
+      gap:32px;
+      z-index:10;
+      flex-wrap:wrap;
+    }
+
+    /* Haz los botones auto/estrechos para que no ocupen toda la fila */
+    .btn, .btn_red{
+      display:inline-flex; 
+      align-items:center; 
+      justify-content:center;
+      height:60px; padding:0 22px;                 /* ancho por contenido */
+      min-width: 220px;                             /* o lo que prefieras */
+      border:0; border-radius:14px;
+      text-decoration:none; color:#fff; cursor:pointer;
+      margin-inline: 47px 9px;
+      transition:transform .2s ease, filter .2s ease;
+    }
+
+    .btn{ background:#009CC6; font-family: 'BanamexDisplayBold', sans-serif; font-size: 25px;}
+    .btn_red{ background:#FF1B44; font-family: 'BanamexDisplay', sans-serif; font-size: 25px}
+
+    .btn:hover, .btn_red:hover{ transform:translateY(-2px); filter:brightness(1.06); }
+    .btn:active, .btn_red:active{ transform:none; filter:brightness(.98); }
+
+    /* Focus visible (accesibilidad) */
+    .btn:focus-visible,
+    .btn_red:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+    }
+    
+    /* ACTIVAR SCROLL EN MÓVILES */
+    @media (max-width:768px){
+      /* Activar scroll vertical */
+      html, body {
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      
+      /* Permitir que hero y frame crezcan */
+      .hero {
+        height: auto;
+        min-height: 100vh;
+      }
+      
+      .frame {
+        height: auto;
+        min-height: 100vh;
+      }
+      
+      /* Botones en columna (vertical) */
+      .actions{
+        left:20px;
+        bottom:20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      
+      /* Botones más anchos en mobile */
+      .btn, .btn_red {
+        width: 15%;
+        max-width: 25px;
+        margin-inline: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="frame">
+      <!-- Tu imagen YA recortada por Python -->
+      <div class="photo-area">
+        <img id="photoGenerated"
+             src="{{ result_url }}" alt="Imagen generada"
+             alt="Foto generada">
+      </div>
+
+      <!-- Botones HTML que interactúan -->
+      <div class="actions">
+        <a class="btn_red" href="{{ url_for('select_character') }}">Volver a generar</a>
+        <a class="btn" href="{{ url_for('qr', filename=filename) }}">Guardar</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

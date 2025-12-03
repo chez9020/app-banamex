@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Experiencias Banamex - QR</title>
+  <style>
+    /* DEFINIR LAS FUENTES PERSONALIZADAS */
+    @font-face {
+      font-family: 'BanamexDisplayBold';
+      src: url("{{ url_for('static', filename='fonts/BanamexDisplay-Bold.otf') }}") format('opentype');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'BanamexDisplay';
+      src: url("{{ url_for('static', filename='fonts/BanamexDisplay-Regular.otf') }}") format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'BanamexText';
+      src: url("{{ url_for('static', filename='fonts/BanamexText-Regular.otf') }}") format('opentype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0d4650;
+      color: #fff;
+    }
+
+    .hero {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .frame {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      max-width: 100vw;
+      aspect-ratio: 9/16;
+      /* Tu imagen de fondo con todos los elementos */
+      background: url("{{ url_for('static', filename='images/Pantalla_qr_mentiras.png') }}") center/cover no-repeat;
+    }
+
+    /* Área donde debe ir el QR - ajusta estos valores según tu imagen */
+    .qr-area {
+      position: absolute;
+      /* Posición ajustada basándome en tu imagen */
+      left: 62.2%;
+      top: 17.2%;  /* El QR está en la parte superior */
+      transform: translateX(-5%);  /* Centrado horizontalmente */
+      width: 280px;    /* Tamaño más pequeño para caber en el cuadro */
+      height: 280px;   
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+}
+
+    /* El QR en sí */
+    .qr-area img {
+      width: 95%;
+      height: 95%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Botón de regreso al inicio */
+    .btn-inicio {
+        position: absolute;
+        bottom: 50px;  /* Distancia desde abajo */
+        left: 50%;
+        transform: translateX(-50%);
+        background: #ff1b44;  /* Color rojo Banamex */
+        color: white;
+        padding: 0px 50px;
+        width: 200px;
+        padding: 0;
+        border: none;
+        border-radius: 14px;
+        font-size: 20px;
+        font-weight: 600;
+        height: 60px;
+        font-family: 'BanamexDisplay', sans-serif;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 100;
+        /* AGREGAR ESTAS LÍNEAS PARA CENTRAR EL TEXTO */
+        display: flex;
+        align-items: center;      /* Centra verticalmente */
+        justify-content: center;   /* Centra horizontalmente */
+    }
+
+    .btn-inicio:hover {
+      background: #e01839;
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-inicio:active {
+      transform: translateX(-50%) translateY(0);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive - ajusta el tamaño del QR en móviles */
+    @media (max-width: 768px) {
+      .qr-area {
+        width: 165px;
+        height: 165px;
+        padding: 10px;
+      }
+      
+      .btn-inicio {
+        padding: 14px 35px;
+        font-size: 16px;
+        bottom: 120px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .frame {
+        max-width: 540px;
+      }
+      
+      .qr-area {
+        width: 250px;
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="frame">
+      <!-- Área del código QR -->
+      <div class="qr-area">
+        <img src="{{ qr_url }}" alt="Código QR" />
+      </div>
+      
+      <!-- Botón para regresar al inicio -->
+      <a href="{{ url_for('index') }}" class="btn-inicio">Volver al Inicio</a>
+    </div>
+  </div>
+</body>
+</html>

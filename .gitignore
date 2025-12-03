@@ -1,0 +1,6 @@
+/home/ubuntu/apps/mentiras/static/uploads/
+/home/ubuntu/apps/mentiras/static/results/
+*.env
+*.venv
+.env
+.venv
