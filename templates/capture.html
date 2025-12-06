@@ -132,6 +132,20 @@
             pointer-events: none;
         }
 
+        /* Nueva pleca superior */
+        .overlay-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 15%; /* Ajusta según necesites */
+            background: url("{{ url_for('static', filename='images/pleca_banamex.png') }}") no-repeat;
+            background-size: contain;
+            background-position: center top;
+            z-index: 6;
+            pointer-events: none;
+        }
+
 
         /* Flash effect para la captura */
         .flash {
@@ -258,7 +272,10 @@
     <!-- Contador -->
     <div class="countdown-overlay" id="countdown">5</div>
 
-    <!-- Imagen decorativa PNG que sobrepondrás -->
+    <!-- Pleca superior -->
+    <div class="overlay-header"></div>
+
+    <!-- Imagen decorativa PNG que sobrepondrás (Inferior) -->
     <div class="overlay-decoration"></div>
     
     <!-- Flash effect -->

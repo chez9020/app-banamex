@@ -35,44 +35,44 @@
       background:url("{{ url_for('static', filename='images/Pantalla_selecciona.png') }}") center/cover no-repeat;
     }
 
-    /* === CENTRADO REAL DEL GRID ===
-       - Horizontal: left:50% + translateX(-50%)
-       - Vertical: controla con --v (porcentaje desde arriba)
-    */
+    /* === CENTRADO REAL DEL GRID === */
     .grid-anchor{
-      --v: 54%;              /* <- ajusta este % para mover verticalmente */
+      --v: 52%;              /* Centrado vertical real */
       position:absolute;
       left:50%;
       top:var(--v);
-      transform:translate(-50%, -50%); /* centra respecto al punto (50%, --v) */
-      width:min(1100px, 92vw);
-    }
-
-    /* GRID de personajes */
-    .characters-grid{
-      display:grid;
-      grid-template-columns:repeat(4, minmax(150px, 1fr));
-      gap:25px;
+      transform:translate(-50%, -50%);
       width:100%;
+      display: flex;
+      justify-content: center;
     }
 
-    .character-card{ width:100%; min-width:0; cursor:pointer; transition:.2s ease; }
-    .character-card:hover{ transform:translateY(-6px); }
-    .character-card:active{ transform:translateY(-3px); }
-    .character-card.selected{ outline:4px solid #00bcd4; box-shadow:0 10px 26px rgba(0,188,212,.25); }
+    /* GRID de personajes -> Ahora Flex Column */
+    .characters-grid{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:45px; /* Separación entre las dos fotos */
+      width:auto;
+    }
+
+    .character-card{ 
+        width: 280px; 
+        height: 280px; 
+        overflow: hidden; 
+        cursor:pointer; 
+        transition:.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .character-card:hover{ transform:scale(1.05); }
+    .character-card:active{ transform:scale(0.98); }
+    .character-card.selected{ outline:5px solid #fff; box-shadow:0 0 30px rgba(255,255,255,0.6); }
     .character-image{ width:100%; height:100%; display:block; object-fit:cover; }
 
-    /* Responsivo */
-    @media (max-width:1024px){
-      .characters-grid{ grid-template-columns:repeat(4,1fr); gap:18px; }
-    }
-    @media (max-width:768px){
-      .characters-grid{ grid-template-columns:repeat(4,1fr); gap:14px; }
-    }
+    /* Responsivo: Si la pantalla es muy chica, achicar un poco */
     @media (max-width:480px){
-      .characters-grid{ grid-template-columns:repeat(4,1fr); gap:12px; }
+      .character-card{ width: 220px; height: 220px; gap: 30px; }
     }
-
+    
     /* Overlay de carga */
     .loading{
       display:none; position:fixed; inset:0; background:rgba(0,0,0,.8);
@@ -87,33 +87,17 @@
 <body>
   <div class="hero">
     <div class="frame">
-      <div class="grid-anchor" style="--v: 54%;">
+      <div class="grid-anchor">
         <div class="characters-grid">
-          <div class="character-card" data-character="look_a">
-            <img src="{{ url_for('static', filename='images/character_pink.jpg') }}" alt="Look Rosa" class="character-image">
-          </div>
-          <div class="character-card" data-character="look_b">
-            <img src="{{ url_for('static', filename='images/character_blue.jpg') }}" alt="Look Azul" class="character-image">
-          </div>
-          <div class="character-card" data-character="look_c">
-            <img src="{{ url_for('static', filename='images/character_orange.jpg') }}" alt="Look Naranja" class="character-image">
-          </div>
-          <div class="character-card" data-character="look_d">
-            <img src="{{ url_for('static', filename='images/character_green.jpg') }}" alt="Look Verde" class="character-image">
+          
+          <div class="character-card" data-character="look_man">
+            <img src="{{ url_for('static', filename='images/man.png') }}" alt="Hombre" class="character-image">
           </div>
 
-          <div class="character-card" data-character="look_e">
-            <img src="{{ url_for('static', filename='images/character_red_m.jpg') }}" alt="Look Rojo" class="character-image">
+          <div class="character-card" data-character="look_woman">
+            <img src="{{ url_for('static', filename='images/woman.png') }}" alt="Mujer" class="character-image">
           </div>
-          <div class="character-card" data-character="look_f">
-            <img src="{{ url_for('static', filename='images/character_blue_m.jpg') }}" alt="Look Azul" class="character-image">
-          </div>
-          <div class="character-card" data-character="look_g">
-            <img src="{{ url_for('static', filename='images/character_orange_m.jpg') }}" alt="Look Naranja" class="character-image">
-          </div>
-          <div class="character-card" data-character="look_h">
-            <img src="{{ url_for('static', filename='images/character_green_m.jpg') }}" alt="Look Verde" class="character-image">
-          </div>
+
         </div>
       </div>
     </div>

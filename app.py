@@ -112,7 +112,8 @@ def preview(filename):
 # --- QR / descarga ---
 @app.route("/qr/<filename>")
 def qr(filename):
-    BASE_URL = "https://34.226.49.191.sslip.io"  # TODO: cámbialo en prod
+    #BASE_URL = "https://344.226.49.191.sslip.io.226.49.191.sslip.io"  # TODO: cámbialo en prod
+    BASE_URL = "http://127.0.0.1:5000"  # TODO: cámbialo en prod
     download_url = f"{BASE_URL}{url_for('serve_result', filename=filename)}"
 
     qr_img = qrcode.make(download_url)

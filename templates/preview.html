@@ -77,20 +77,32 @@
     }
 
     /* Haz los botones auto/estrechos para que no ocupen toda la fila */
-    .btn, .btn_red{
+    .btn{
       display:inline-flex; 
       align-items:center; 
       justify-content:center;
       height:60px; padding:0 22px;                 /* ancho por contenido */
       min-width: 220px;                             /* o lo que prefieras */
       border:0; border-radius:14px;
-      text-decoration:none; color:#fff; cursor:pointer;
+      text-decoration:none; color:#FFFFFF; cursor:pointer;
       margin-inline: 47px 9px;
       transition:transform .2s ease, filter .2s ease;
     }
 
-    .btn{ background:#009CC6; font-family: 'BanamexDisplayBold', sans-serif; font-size: 25px;}
-    .btn_red{ background:#FF1B44; font-family: 'BanamexDisplay', sans-serif; font-size: 25px}
+    .btn_red{
+          display:inline-flex; 
+          align-items:center; 
+          justify-content:center;
+          height:60px; padding:0 22px;                 /* ancho por contenido */
+          min-width: 220px;                             /* o lo que prefieras */
+          border:0; border-radius:14px;
+          text-decoration:none; color:#450a27; cursor:pointer;
+          margin-inline: 47px 9px;
+          transition:transform .2s ease, filter .2s ease;
+    }
+
+    .btn{ background:#FF1B44; font-family: 'BanamexDisplayBold', sans-serif; font-size: 25px;}
+    .btn_red{ background:#FFFFFF; font-family: 'BanamexDisplayBold', sans-serif; font-size: 25px}
 
     .btn:hover, .btn_red:hover{ transform:translateY(-2px); filter:brightness(1.06); }
     .btn:active, .btn_red:active{ transform:none; filter:brightness(.98); }
@@ -98,7 +110,7 @@
     /* Focus visible (accesibilidad) */
     .btn:focus-visible,
     .btn_red:focus-visible {
-      outline: 3px solid #fff;
+      outline: 3px solid #FF1B44;
       outline-offset: 2px;
     }
     
