@@ -111,7 +111,7 @@ def add_overlays(img_or_path, overlays_dir="static/images"):
         w, h = base.size
 
         # Cargar overlay
-        overlay = Image.open(os.path.join(overlays_dir, "foto_mentiras_logo.png")).convert("RGBA")
+        overlay = Image.open(os.path.join(overlays_dir, "overlay_tina.png")).convert("RGBA")
         
         # Si el overlay no tiene el mismo tamaño, redimensionar
         if overlay.size != (w, h):

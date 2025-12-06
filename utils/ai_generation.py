@@ -20,21 +20,14 @@ client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Tus prompts por personaje (idénticos a los que ya tienes)
 PROMPTS = {
-    'look_woman': """Genera una imagen: Retrato estilo cartel promocional con estas dimensiones 610x 930px. 
-    La persona está delante de un Fondo azul eléctrico. En un encuadre más amplio (plano general o full-body shot) que muestre la figura completa con espacio libre arriba y a los lados. 
-    Perspectiva con ligera profundidad de campo (efecto de cámara real), manteniendo el enfoque en el sujeto.
-    Vestuario: leggins negros ajustados con saco largo azul con hombreras, blusa blanca, cinturón ancho dorado. Botines negros. 
-    Peinado largo y voluminoso con estilo rockero ochentero. Maquillaje fuerte con delineado marcado y sombras oscuras.
-    Elementos decorativos: maletín, cassetes, rayos en estilo pop-art, casetes, rayos neón estilizados, portafolio ochentero. 
-    Estética teatral vibrante, alta resolución. No incluyas ningun texto, ni marcos. Mantén la estética y la iluminación tipo póster publicitario.
+    'look_woman': """1980s rock diva portrait, style of Tina Turner. Massive voluminous wild spiky blonde-streaked hair, explosive hair texture. 
+    Bold 80s stage makeup, heavy blush, shiny red lipstick. Wearing a distressed black leather jacket over a sequined mini-dress, fishnet details. 
+    Sweaty glowing skin. Dramatic concert stage lighting with colored gels (red and blue lights), gritty analog film grain, powerful confident energy.
     """,
-    'look_man': """Genera una imagen: Retrato estilo cartel promocional con dimensiones 610x930px. 
-    La persona está posando frente a un fondo azul eléctrico, en un encuadre más amplio (plano general o full-body shot) que muestre la figura completa con espacio libre arriba y a los lados. 
-    Perspectiva con ligera profundidad de campo (efecto de cámara real), manteniendo el enfoque en el sujeto.
-    Vestuario: saco azul con hombreras, camisa negra, corbata azul, pantalones negros rectos, cinturón elegante.
-    Debe tener tenis blancos de bota. Peinado engominado con volumen típico de los 80.
-    Elementos decorativos: maletín, cassettes, rayos en estilo pop-art, rayos neón estilizados, portafolio ochentero.
-    No incluyas ningún texto ni marcos. Mantén la estética y la iluminación tipo póster publicitario.
+    'look_man': """1980s male rock star portrait, channeling the grit and swagger style of Tina Turner.
+    Big textured voluminous rocker hair, teased and wild (glam metal style). Wearing an open distressed denim vest with studs over bare chest, 
+    lots of chunky silver chains and leather wristbands. Intense sweaty face, strong jawline, "guyliner" (smudged eyeliner). 
+    Warm intense stage spotlights creating deep shadows, coarse film photograph texture, rebellious attitude.
     """
 }
 
