@@ -86,7 +86,7 @@ def generate_photo():
     # Llama a tu pipeline (Gemini + post-procesos opcionales)
     result_img = generate_with_gemini(temp_path, character)
     # Ejemplo si quieres aplicar tus utilidades: 610x930px
-    result_img = resize_and_crop(result_img, 610, 930)
+    #result_img = resize_and_crop(result_img, 610, 930)
     # result_img = upscale_vertical(result_img)
     result_img = add_overlays(result_img)
 
