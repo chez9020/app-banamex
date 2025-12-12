@@ -156,9 +156,12 @@
     <div class="frame">
       <!-- Tu imagen YA recortada por Python -->
       <div class="photo-area">
-        <img id="photoGenerated"
-             src="{{ result_url }}" alt="Imagen generada"
-             alt="Foto generada">
+        <!-- AHORA MOSTRAMOS VIDEO -->
+        <video id="photoGenerated" src="{{ result_url }}" 
+               autoplay loop playsinline controls 
+               style="width:92%; height:92%; object-fit:contain; display:block;">
+          Tu navegador no soporta video HTML5.
+        </video>
       </div>
 
       <!-- Botones HTML que interactúan -->

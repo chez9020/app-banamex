@@ -5,6 +5,7 @@ from PIL import Image, UnidentifiedImageError
 import qrcode
 # Tus utilidades (no cambian)
 from utils.image_processing import upscale_vertical, resize_and_crop, add_overlays
+from utils.video_processing import add_video_overlay
 from utils.ai_generation import generate_with_gemini
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -84,16 +85,33 @@ def generate_photo():
         return jsonify({"error": f"Imagen inválida: {e}"}), 400
 
     # Llama a tu pipeline (Gemini + post-procesos opcionales)
-    result_img = generate_with_gemini(temp_path, character)
-    # Ejemplo si quieres aplicar tus utilidades: 610x930px
-    #result_img = resize_and_crop(result_img, 610, 930)
-    # result_img = upscale_vertical(result_img)
-    result_img = add_overlays(result_img)
-
-    # Guardar resultado
-    result_filename = f"photo_{unique_id}.jpg"
+    # AHORA GENERA VIDEO (MP4)
+    raw_video_filename = f"raw_video_{unique_id}.mp4"
+    raw_video_path = os.path.join(RESULT_FOLDER, raw_video_filename)
+    
+    result_filename = f"video_{unique_id}.mp4"
     result_path = os.path.join(RESULT_FOLDER, result_filename)
-    result_img.save(result_path, "PNG", quality=95, optimize=True)
+    
+    try:
+        # 1. Generar video RAW con Gemini
+        generate_with_gemini(temp_path, character, raw_video_path)
+        
+        # 2. Agregar Overlay
+        overlay_path = os.path.join(BASE_DIR, "static", "images", "overlay_tina.png")
+        if os.path.exists(overlay_path):
+            add_video_overlay(raw_video_path, overlay_path, result_path)
+            # Limpiar video raw
+            if os.path.exists(raw_video_path):
+                os.remove(raw_video_path)
+        else:
+            # Si no hay overlay, el resultado es el raw (renombrar)
+            print(f"Overlay no encontrado en {overlay_path}, usando video original.")
+            if os.path.exists(result_path): os.remove(result_path) # cleanup if exists
+            os.rename(raw_video_path, result_path)
+        
+    except Exception as e:
+        print(f"Error generando video: {e}")
+        return jsonify({"error": str(e)}), 500
 
     return jsonify({
         "filename": result_filename,
