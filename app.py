@@ -1,5 +1,5 @@
+import os, uuid, base64, threading
 from flask import Flask, render_template, request, redirect, url_for, jsonify, send_from_directory, abort
-import os, uuid, base64
 from io import BytesIO
 from PIL import Image, UnidentifiedImageError
 import qrcode
@@ -25,6 +25,47 @@ UPLOAD_FOLDER = os.path.join(BASE_DIR, "static", "uploads")
 RESULT_FOLDER = os.path.join(BASE_DIR, "static", "results")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
+
+# --- ALMACENAMIENTO DE TAREAS EN MEMORIA ---
+tasks = {}
+
+def background_video_task(task_id, temp_path, character, raw_video_path, result_path, overlay_path):
+    """
+    Función que corre en un hilo separado para no bloquear la petición HTTP.
+    """
+    try:
+        tasks[task_id] = {"status": "processing"}
+        print(f"[Task {task_id}] Iniciando generación de video en background...")
+
+        # 1. Generar video RAW con Gemini
+        # Importamos aquí para asegurar contexto ? aunque no es estrictamente necesario si ya están arriba
+        from utils.ai_generation import generate_with_gemini
+        from utils.video_processing import add_video_overlay
+        
+        generate_with_gemini(temp_path, character, raw_video_path)
+        
+        # 2. Agregar Overlay
+        if os.path.exists(overlay_path):
+            add_video_overlay(raw_video_path, overlay_path, result_path)
+            # Limpiar video raw
+            if os.path.exists(raw_video_path):
+                os.remove(raw_video_path)
+        else:
+            # Si no hay overlay, el resultado es el raw (renombrar)
+            print(f"Overlay no encontrado en {overlay_path}, usando video original.")
+            if os.path.exists(result_path): os.remove(result_path) # cleanup if exists
+            os.rename(raw_video_path, result_path)
+            
+        # 3. Finalizar tarea
+        tasks[task_id] = {
+            "status": "completed",
+            "filename": os.path.basename(result_path)
+        }
+        print(f"[Task {task_id}] Tarea completada exitosamente.")
+
+    except Exception as e:
+        print(f"[Task {task_id}] Error: {e}")
+        tasks[task_id] = {"status": "failed", "error": str(e)}
 
 # --- Home ---
 @app.route("/")
@@ -85,38 +126,44 @@ def generate_photo():
         return jsonify({"error": f"Imagen inválida: {e}"}), 400
 
     # Llama a tu pipeline (Gemini + post-procesos opcionales)
-    # AHORA GENERA VIDEO (MP4)
+    # AHORA GENERA VIDEO (MP4) DE FORMA ASÍNCRONA
     raw_video_filename = f"raw_video_{unique_id}.mp4"
     raw_video_path = os.path.join(RESULT_FOLDER, raw_video_filename)
     
     result_filename = f"video_{unique_id}.mp4"
     result_path = os.path.join(RESULT_FOLDER, result_filename)
-    
-    try:
-        # 1. Generar video RAW con Gemini
-        generate_with_gemini(temp_path, character, raw_video_path)
-        
-        # 2. Agregar Overlay
-        overlay_path = os.path.join(BASE_DIR, "static", "images", "overlay_tina.png")
-        if os.path.exists(overlay_path):
-            add_video_overlay(raw_video_path, overlay_path, result_path)
-            # Limpiar video raw
-            if os.path.exists(raw_video_path):
-                os.remove(raw_video_path)
-        else:
-            # Si no hay overlay, el resultado es el raw (renombrar)
-            print(f"Overlay no encontrado en {overlay_path}, usando video original.")
-            if os.path.exists(result_path): os.remove(result_path) # cleanup if exists
-            os.rename(raw_video_path, result_path)
-        
-    except Exception as e:
-        print(f"Error generando video: {e}")
-        return jsonify({"error": str(e)}), 500
 
+    overlay_path = os.path.join(BASE_DIR, "static", "images", "overlay_tina.png")
+    
+    # Generar ID de tarea
+    task_id = str(uuid.uuid4())
+    
+    # Iniciar hilo
+    thread = threading.Thread(
+        target=background_video_task,
+        args=(task_id, temp_path, character, raw_video_path, result_path, overlay_path)
+    )
+    thread.start()
+
+    # Responder INMEDIATAMENTE con 202 Accepted y el ID de tarea
     return jsonify({
-        "filename": result_filename,
-        "redirect_url": url_for("preview", filename=result_filename)
-    })
+        "message": "Generación iniciada",
+        "task_id": task_id,
+        "status_url": url_for('get_status', task_id=task_id)
+    }), 202
+
+@app.route('/status/<task_id>', methods=['GET'])
+def get_status(task_id):
+    task = tasks.get(task_id)
+    if not task:
+        return jsonify({"status": "not_found"}), 404
+        
+    # Si completó, agregamos la URL de redirección
+    response = task.copy()
+    if task['status'] == 'completed':
+        response['redirect_url'] = url_for("preview", filename=task['filename'])
+        
+    return jsonify(response)
 
 # --- Preview ---
 @app.route("/preview/<filename>")
