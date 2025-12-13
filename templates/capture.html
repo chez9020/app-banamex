@@ -436,6 +436,8 @@
         }
         
         async function pollStatus(taskId) {
+            const processingText = document.querySelector('.processing-text');
+            
             const pollInterval = setInterval(async () => {
                 try {
                     const res = await fetch(`/status/${taskId}`);
@@ -444,16 +446,26 @@
                     if (statusData.status === 'completed') {
                         clearInterval(pollInterval);
                         window.location.href = statusData.redirect_url;
+                        
                     } else if (statusData.status === 'failed') {
                         clearInterval(pollInterval);
                         alert("Error en la generación: " + (statusData.error || "Desconocido"));
                         window.location.reload();
+                        
                     } else if (statusData.status === 'not_found') {
-                         clearInterval(pollInterval);
-                         alert("Tarea no encontrada.");
-                         window.location.reload();
+                         // Esperar un poco más, a veces el archivo tarda en escribirse
+                         console.warn("Status file not found yet...");
+                         
+                    } else {
+                        // ACTUALIZAR TEXTO SEGÚN EL PASO
+                        if (statusData.step === 'generating_raw_video') {
+                            processingText.textContent = "Creando video con IA...";
+                        } else if (statusData.step === 'adding_overlay') {
+                            processingText.textContent = "Añadiendo efectos...";
+                        } else if (statusData.step === 'starting') {
+                             processingText.textContent = "Iniciando...";
+                        }
                     }
-                    // Si sigue 'processing', no hacemos nada, esperamos al siguiente intervalo
                 } catch (e) {
                     console.error("Error polling:", e);
                 }

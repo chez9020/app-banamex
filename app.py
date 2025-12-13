@@ -56,17 +56,23 @@ def background_video_task(task_id, temp_path, character, raw_video_path, result_
     Función que corre en un hilo separado. Actualiza el archivo de estado en disco.
     """
     try:
-        # Estado incial (ya debió ser creado, pero confirmamos)
-        save_task_status(task_id, {"status": "processing"})
-        print(f"[Task {task_id}] Iniciando generación de video en background...")
+        # STEP 1: Iniciando
+        print(f"[Task {task_id}] Iniciando generación...")
+        save_task_status(task_id, {"status": "processing", "step": "starting", "progress": 5})
 
         from utils.ai_generation import generate_with_gemini
         from utils.video_processing import add_video_overlay
         
-        # 1. Generar video RAW
+        # STEP 2: Generando Video RAW
+        print(f"[Task {task_id}] Llamando a Gemini Veo...")
+        save_task_status(task_id, {"status": "processing", "step": "generating_raw_video", "progress": 20})
+        
         generate_with_gemini(temp_path, character, raw_video_path)
         
-        # 2. Agregar Overlay
+        # STEP 3: Overlay
+        print(f"[Task {task_id}] Agregando overlay...")
+        save_task_status(task_id, {"status": "processing", "step": "adding_overlay", "progress": 80})
+
         if os.path.exists(overlay_path):
             add_video_overlay(raw_video_path, overlay_path, result_path)
             if os.path.exists(raw_video_path):
@@ -76,17 +82,24 @@ def background_video_task(task_id, temp_path, character, raw_video_path, result_
             if os.path.exists(result_path): os.remove(result_path)
             os.rename(raw_video_path, result_path)
             
-        # 3. Finalizar tarea (Guardar 'completed' en disco)
+        # STEP 4: Finalizar
+        print(f"[Task {task_id}] Finalizado.")
         save_task_status(task_id, {
             "status": "completed",
+            "progress": 100,
             "filename": os.path.basename(result_path)
         })
-        print(f"[Task {task_id}] Tarea completada exitosamente.")
 
     except Exception as e:
-        print(f"[Task {task_id}] Error: {e}")
-        # Guardar error en disco
-        save_task_status(task_id, {"status": "failed", "error": str(e)})
+        print(f"[Task {task_id}] Error CRÍTICO: {e}")
+        import traceback
+        traceback.print_exc()
+        # Guardar error detallado en el archivo de estado
+        save_task_status(task_id, {
+            "status": "failed", 
+            "error": str(e),
+            "step": "error"
+        })
 
 # --- Home ---
 @app.route("/")
