@@ -26,46 +26,67 @@ RESULT_FOLDER = os.path.join(BASE_DIR, "static", "results")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULT_FOLDER, exist_ok=True)
 
-# --- ALMACENAMIENTO DE TAREAS EN MEMORIA ---
-tasks = {}
+# --- ALMACENAMIENTO DE ESTATUS BASEADO EN ARCHIVOS (Para Gunicorn/Multi-worker) ---
+import json
+
+def get_status_file_path(task_id):
+    return os.path.join(RESULT_FOLDER, f"status_{task_id}.json")
+
+def save_task_status(task_id, status_data):
+    """Guarda el estado en un archivo JSON para que cualquier worker lo vea."""
+    try:
+        with open(get_status_file_path(task_id), 'w') as f:
+            json.dump(status_data, f)
+    except Exception as e:
+        print(f"Error guardando status {task_id}: {e}")
+
+def load_task_status(task_id):
+    """Lee el estado desde el archivo JSON."""
+    path = get_status_file_path(task_id)
+    if os.path.exists(path):
+        try:
+            with open(path, 'r') as f:
+                return json.load(f)
+        except:
+            return None
+    return None
 
 def background_video_task(task_id, temp_path, character, raw_video_path, result_path, overlay_path):
     """
-    Función que corre en un hilo separado para no bloquear la petición HTTP.
+    Función que corre en un hilo separado. Actualiza el archivo de estado en disco.
     """
     try:
-        tasks[task_id] = {"status": "processing"}
+        # Estado incial (ya debió ser creado, pero confirmamos)
+        save_task_status(task_id, {"status": "processing"})
         print(f"[Task {task_id}] Iniciando generación de video en background...")
 
-        # 1. Generar video RAW con Gemini
-        # Importamos aquí para asegurar contexto ? aunque no es estrictamente necesario si ya están arriba
         from utils.ai_generation import generate_with_gemini
         from utils.video_processing import add_video_overlay
         
+        # 1. Generar video RAW
         generate_with_gemini(temp_path, character, raw_video_path)
         
         # 2. Agregar Overlay
         if os.path.exists(overlay_path):
             add_video_overlay(raw_video_path, overlay_path, result_path)
-            # Limpiar video raw
             if os.path.exists(raw_video_path):
                 os.remove(raw_video_path)
         else:
-            # Si no hay overlay, el resultado es el raw (renombrar)
             print(f"Overlay no encontrado en {overlay_path}, usando video original.")
-            if os.path.exists(result_path): os.remove(result_path) # cleanup if exists
+            if os.path.exists(result_path): os.remove(result_path)
             os.rename(raw_video_path, result_path)
             
-        # 3. Finalizar tarea
-        tasks[task_id] = {
+        # 3. Finalizar tarea (Guardar 'completed' en disco)
+        save_task_status(task_id, {
             "status": "completed",
             "filename": os.path.basename(result_path)
-        }
+        })
         print(f"[Task {task_id}] Tarea completada exitosamente.")
 
     except Exception as e:
         print(f"[Task {task_id}] Error: {e}")
-        tasks[task_id] = {"status": "failed", "error": str(e)}
+        # Guardar error en disco
+        save_task_status(task_id, {"status": "failed", "error": str(e)})
 
 # --- Home ---
 @app.route("/")
@@ -95,11 +116,7 @@ def capture():
 @app.route("/generate-photo", methods=["POST"])
 def generate_photo():
     """
-    Espera JSON:
-      {
-        "image": "data:image/jpeg;base64,...",
-        "character": "look_a"
-      }
+    Espera JSON: { "image": "...", "character": "..." }
     """
     data = request.get_json(silent=True) or {}
     image_b64 = data.get("image")
@@ -125,8 +142,7 @@ def generate_photo():
     except (UnidentifiedImageError, ValueError) as e:
         return jsonify({"error": f"Imagen inválida: {e}"}), 400
 
-    # Llama a tu pipeline (Gemini + post-procesos opcionales)
-    # AHORA GENERA VIDEO (MP4) DE FORMA ASÍNCRONA
+    # Configuración de archivos
     raw_video_filename = f"raw_video_{unique_id}.mp4"
     raw_video_path = os.path.join(RESULT_FOLDER, raw_video_filename)
     
@@ -135,9 +151,13 @@ def generate_photo():
 
     overlay_path = os.path.join(BASE_DIR, "static", "images", "overlay_tina.png")
     
-    # USA EL MISMO ID PARA TODO (Para poder buscar el archivo si la memoria falla)
+    # Task ID
     task_id = unique_id 
     
+    # 1. Crear archivo de estado INICIAL (Processing) antes de lanzar el hilo
+    # Esto asegura que si el worker del status corre rápido, encuentre algo.
+    save_task_status(task_id, {"status": "processing"})
+
     # Iniciar hilo
     thread = threading.Thread(
         target=background_video_task,
@@ -158,29 +178,28 @@ def generate_photo():
 
 @app.route('/status/<task_id>', methods=['GET'])
 def get_status(task_id):
-    # 1. Buscar en memoria (RAM)
-    task = tasks.get(task_id)
+    # 1. Intentar cargar estado desde el archivo compartido .json
+    status_data = load_task_status(task_id)
     
-    if task:
-        response = task.copy()
-        if task['status'] == 'completed':
-            response['redirect_url'] = url_for("preview", filename=task['filename'])
+    if status_data:
+        response = status_data.copy()
+        if status_data['status'] == 'completed':
+            response['redirect_url'] = url_for("preview", filename=status_data['filename'])
         return jsonify(response)
 
-    # 2. PLAN B: Si no está en memoria, buscar en el DISCO
-    # Esto salva la situación si Gunicorn se reinició
+    # 2. Fallback: Si no hay archivo JSON, buscamos el video final por si acaso
+    # (Ejemplo: se borró el json pero quedó el mp4)
     expected_filename = f"video_{task_id}.mp4"
     expected_path = os.path.join(RESULT_FOLDER, expected_filename)
 
     if os.path.exists(expected_path):
-        # ¡El video existe! Recuperamos el estado exitoso
         return jsonify({
             "status": "completed",
             "filename": expected_filename,
             "redirect_url": url_for("preview", filename=expected_filename)
         })
 
-    # 3. Si no está en RAM ni en Disco, entonces sí es un 404 real
+    # 3. Si no hay ni JSON ni Video -> 404
     return jsonify({"status": "not_found"}), 404
 
 # --- Preview ---
