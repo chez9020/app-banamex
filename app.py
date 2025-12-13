@@ -135,8 +135,8 @@ def generate_photo():
 
     overlay_path = os.path.join(BASE_DIR, "static", "images", "overlay_tina.png")
     
-    # Generar ID de tarea
-    task_id = str(uuid.uuid4())
+    # USA EL MISMO ID PARA TODO (Para poder buscar el archivo si la memoria falla)
+    task_id = unique_id 
     
     # Iniciar hilo
     thread = threading.Thread(
@@ -145,25 +145,43 @@ def generate_photo():
     )
     thread.start()
 
+    # Construir la URL manualmente para evitar errores de Nginx
+    # Esto asegura que siempre tenga el prefijo /apps/mentiras
+    status_url = f"/apps/mentiras/status/{task_id}"
+
     # Responder INMEDIATAMENTE con 202 Accepted y el ID de tarea
     return jsonify({
         "message": "Generación iniciada",
         "task_id": task_id,
-        "status_url": url_for('get_status', task_id=task_id)
+        "status_url": status_url
     }), 202
 
 @app.route('/status/<task_id>', methods=['GET'])
 def get_status(task_id):
+    # 1. Buscar en memoria (RAM)
     task = tasks.get(task_id)
-    if not task:
-        return jsonify({"status": "not_found"}), 404
-        
-    # Si completó, agregamos la URL de redirección
-    response = task.copy()
-    if task['status'] == 'completed':
-        response['redirect_url'] = url_for("preview", filename=task['filename'])
-        
-    return jsonify(response)
+    
+    if task:
+        response = task.copy()
+        if task['status'] == 'completed':
+            response['redirect_url'] = url_for("preview", filename=task['filename'])
+        return jsonify(response)
+
+    # 2. PLAN B: Si no está en memoria, buscar en el DISCO
+    # Esto salva la situación si Gunicorn se reinició
+    expected_filename = f"video_{task_id}.mp4"
+    expected_path = os.path.join(RESULT_FOLDER, expected_filename)
+
+    if os.path.exists(expected_path):
+        # ¡El video existe! Recuperamos el estado exitoso
+        return jsonify({
+            "status": "completed",
+            "filename": expected_filename,
+            "redirect_url": url_for("preview", filename=expected_filename)
+        })
+
+    # 3. Si no está en RAM ni en Disco, entonces sí es un 404 real
+    return jsonify({"status": "not_found"}), 404
 
 # --- Preview ---
 @app.route("/preview/<filename>")
