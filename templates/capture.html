@@ -424,9 +424,9 @@
                     throw new Error(data.error || 'Error iniciando generación');
                 }
                 
-                // 2. Polling de estado
-                const taskId = data.task_id;
-                await pollStatus(taskId);
+                // 2. Polling de estado usando la URL correcta que nos dio el server
+                // (Esto arregla el problema de /apps/mentiras vs /status raiz)
+                await pollStatus(data.status_url);
                 
             } catch (error) {
                 console.error('Error:', error);
@@ -435,12 +435,12 @@
             }
         }
         
-        async function pollStatus(taskId) {
+        async function pollStatus(statusUrl) {
             const processingText = document.querySelector('.processing-text');
             
             const pollInterval = setInterval(async () => {
                 try {
-                    const res = await fetch(`/status/${taskId}`);
+                    const res = await fetch(statusUrl);
                     const statusData = await res.json();
                     
                     if (statusData.status === 'completed') {
