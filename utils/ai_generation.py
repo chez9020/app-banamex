@@ -53,12 +53,14 @@ def generate_with_gemini(image_path: str, character: str, output_video_path: str
     try:
         with open(image_path, "rb") as input_image_file:
             output = replicate.run(
-                "runwayml/gen4-turbo",
+                #"runwayml/gen4-turbo",
+                 "google/veo-3.1-fast",
                 input={
                     "image": input_image_file,
                     "prompt": video_prompt,
-                    "duration": 5,
-                    "aspect_ratio": "9:16"
+                    "duration": 6,
+                    "aspect_ratio": "9:16",
+                    "resolution": "720p"
                 }
             )
         
