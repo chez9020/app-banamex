@@ -19,7 +19,7 @@ load_dotenv()
 # client = genai.Client(api_key=API_KEY)
 
 PROMPTS = {
-    'look_woman': """Full-body 1980s rock diva on stage, inspired by Tina Turner, 
+    'look_woman': """Full-body 1980s rock diva on stage, inspired by., 
     based on the reference photo (same face, same bone structure, same eyes, same mouth, same nose, same body type, same proportions, same pose and expression).
     Hair: messy, voluminous, wild 80s hair with textured spiky layers.
     Makeup: bold stage makeup, heavy blush, metallic eyeshadow, glossy red lipstick.
@@ -30,7 +30,7 @@ PROMPTS = {
     Photography: high-detail realism, slightly sweaty skin glow, cinematic depth, 1980s analog film grain, crisp highlights.
     Strong energetic performance vibe.
     """,
-    'look_man': """Cinematic 1980s concert footage. A male rock icon channeling fierce Tina Turner energy, performing live on a smoky stage. 
+    'look_man': """Cinematic 1980s concert footage. A male rock icon energy, performing live on a smoky stage. 
     He has wild, messy, voluminous blonde spiky hair teased high and sweaty glowing skin. 
     He is wearing a silver sequined open vest with long fringe swinging dynamically, over a shredded mesh tank top, tight distressed leather pants with fishnet cutouts, and chunky platform boots.
     He holds a power stance, legs apart, gripping the microphone intensely, one arm raised high pointing upward. Heavy distinct 80s makeup, guyliner, metallic eyeshadow. Dramatic warm stage lighting, orange and gold spotlights, strong rim light, lens flares.
