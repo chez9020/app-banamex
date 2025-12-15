@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Tu Video - Mentiras</title>
+    <style>
+        /* Diseño oscuro optimizado para celulares */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h2 { margin-bottom: 20px; font-weight: 300; letter-spacing: 1px; text-align: center; }
+
+        .video-container {
+            width: 100%;
+            max-width: 350px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            margin-bottom: 30px;
+            background: #000;
+        }
+
+        video { width: 100%; display: block; }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .btn {
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.1s;
+        }
+
+        .btn:active { transform: scale(0.96); }
+
+        /* Botón Verde (Compartir) */
+        .btn-share { background-color: #00E676; color: #004D40; }
+
+        /* Botón Gris (Descargar) */
+        .btn-download { background-color: #333; color: #fff; border: 1px solid #444; }
+
+        .footer { margin-top: 40px; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+
+    <h2>¡Aquí tienes tu video! ✨</h2>
+
+    <div class="video-container">
+        <video id="myVideo" controls autoplay playsinline loop muted>
+            <source src="{{ result_url }}" type="video/mp4">
+            Tu navegador no soporta video.
+        </video>
+    </div>
+
+    <div class="actions">
+        <button id="shareBtn" class="btn btn-share">
+            🚀 Compartir Video
+        </button>
+
+        <a href="{{ url_for('download_video', filename=filename) }}" class="btn btn-download">
+            📥 Guardar en Galería
+        </a>
+    </div>
+
+    <div class="footer">Mentiras El Musical © 2025</div>
+
+    <script>
+        const shareBtn = document.getElementById('shareBtn');
+        const videoUrl = "{{ result_url }}"; 
+        const filename = "{{ filename }}";
+
+        // Activar audio al tocar
+        document.getElementById('myVideo').addEventListener('click', function() {
+            this.muted = false;
+        });
+
+        shareBtn.addEventListener('click', async () => {
+            const originalText = shareBtn.innerText;
+            shareBtn.innerText = "Preparando...";
+            
+            try {
+                const response = await fetch(videoUrl);
+                const blob = await response.blob();
+                const file = new File([blob], filename, { type: "video/mp4" });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Video Mentiras',
+                        text: '¡Mira mi video generado con IA!'
+                    });
+                } else {
+                    alert("Usa el botón de Guardar para descargar el video.");
+                }
+            } catch (error) {
+                console.log("Error al compartir:", error);
+            } finally {
+                shareBtn.innerText = originalText;
+            }
+        });
+    </script>
+</body>
+</html>
