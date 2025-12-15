@@ -241,8 +241,8 @@ def download_video(filename):
 # --- QR / descarga ---
 @app.route("/qr/<filename>")
 def qr(filename):
-    # Tu URL pública
-    BASE_URL = "https://34.226.49.191.sslip.io/apps/mentiras" 
+    # Tu URL pública (sin subdirectorio, ya que url_for lo agrega)
+    BASE_URL = "https://34.226.49.191.sslip.io" 
     
     # CAMBIO IMPORTANTE:
     # El QR ahora apunta a la ruta '/share/', NO al preview del totem
