@@ -224,22 +224,40 @@ def preview(filename):
         filename=filename
     )
 
+@app.route("/share/<filename>")
+def share_video(filename):
+    # Usaremos un template nuevo llamado 'share_video.html'
+    return render_template(
+        "share_video.html",
+        result_url=url_for("serve_result", filename=filename),
+        filename=filename
+    )
+
+# --- (NUEVO) Ruta para descarga forzada (Necesaria para el botón) ---
+@app.route("/download/<path:filename>")
+def download_video(filename):
+    return send_from_directory(RESULT_FOLDER, filename, as_attachment=True)
+
 # --- QR / descarga ---
 @app.route("/qr/<filename>")
 def qr(filename):
-    BASE_URL = "https://34.226.49.191.sslip.io"  # TODO: cámbialo en prod
-    #BASE_URL = "http://127.0.0.1:5000"  # TODO: cámbialo en prod
-    download_url = f"{BASE_URL}{url_for('serve_result', filename=filename)}"
+    # Tu URL pública
+    BASE_URL = "https://34.226.49.191.sslip.io/apps/mentiras" 
+    
+    # CAMBIO IMPORTANTE:
+    # El QR ahora apunta a la ruta '/share/', NO al preview del totem
+    target_url = f"{BASE_URL}{url_for('share_video', filename=filename)}"
 
-    qr_img = qrcode.make(download_url)
+    qr_img = qrcode.make(target_url)
     qr_filename = f"qr_{filename}.png"
     qr_path = os.path.join(RESULT_FOLDER, qr_filename)
     qr_img.save(qr_path)
 
+    # El Tótem sigue viendo qr.html, pero el contenido del QR lleva al celular a share_video
     return render_template(
         "qr.html",
         qr_url=url_for("serve_result", filename=qr_filename),
-        download_url=download_url
+        download_url=target_url
     )
 
 # --- Servir resultados ---
