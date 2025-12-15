@@ -30,15 +30,11 @@ PROMPTS = {
     Photography: high-detail realism, slightly sweaty skin glow, cinematic depth, 1980s analog film grain, crisp highlights.
     Strong energetic performance vibe.
     """,
-    'look_man': """Full-body photograph of a male 1980s rock icon on stage, channeling the fierce energy and style of Tina Turner.
-    CRITICAL: The output must strictly be based on the reference photo provided (maintaining same facial features, bone structure, eyes, mouth, nose, body type, proportions, specific pose, and intense expression).
-    Hair: Messy, voluminous, wild 80s blonde rocker hair with textured spiky layers, teased high.
-    Makeup: Bold 80s stage makeup suitable for a male rocker: heavy black "guyliner" and smudged kohl, defined contoured cheekbones, metallic silver eyeshadow, stage lip color. Sweaty skin glow.
-    Wardrobe (Adapted for male rocker style): Open sleeveless vest covered in silver sequins with long fringe details swinging, worn over a shredded mesh tank top. Tight distressed leather pants with fishnet cutouts showing underneath. Chunky platform rock boots with heels. Multiple chunky silver chains, studded leather wristbands matching the reference vibe.
-    Pose: Standing front-facing with legs apart in a power stance, gripping a microphone intensely in one hand, the other arm raised high pointing upward (exact same pose as reference photo).
-    Lighting: Dramatic warm concert stage lighting dominated by orange, gold, and deep red tones; strong backlights creating rim light and spotlights hitting the face, slight anamorphic lens flare.
-    Background: Live backing band musicians in shadow, stage risers, glowing industrial bulbs and massive stage light trusses.
-    Photography Style: High-detail realism, cinematic depth of field, rich 1980s analog film grain texture, crisp highlights on sweat and sequins. Strong energetic performance vibe radiating from the subject.
+    'look_man': """Cinematic 1980s concert footage. A male rock icon channeling fierce Tina Turner energy, performing live on a smoky stage. 
+    He has wild, messy, voluminous blonde spiky hair teased high and sweaty glowing skin. 
+    He is wearing a silver sequined open vest with long fringe swinging dynamically, over a shredded mesh tank top, tight distressed leather pants with fishnet cutouts, and chunky platform boots.
+    He holds a power stance, legs apart, gripping the microphone intensely, one arm raised high pointing upward. Heavy distinct 80s makeup, guyliner, metallic eyeshadow. Dramatic warm stage lighting, orange and gold spotlights, strong rim light, lens flares.
+    Background of shadowy musicians and industrial trusses. Shot on 35mm film, grainy vintage texture, handheld camera movement, slow motion, high fidelity, energetic performance atmosphere.
     """
 }
 
