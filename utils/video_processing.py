@@ -21,18 +21,16 @@ def add_video_overlay(video_path, overlay_path, output_path):
 
         # Componer: video fondo, overlay encima
         final_video = CompositeVideoClip([video, overlay])
+        
+        # ELIMINAR AUDIO EXPLÍCITAMENTE
+        final_video.audio = None
 
-        # Guardar (sin audio si el original no tiene, o con audio si tiene)
-        # Veo genera video sin audio usualmente, pero si tuviera, esto lo preserva?
-        # CompositeVideoClip preserva el audio de la primera clip usualmente si se maneja bien,
-        # pero para asegurar:
+        # Guardar (sin audio)
         final_video.write_videofile(
             output_path, 
             codec='libx264', 
-            audio_codec='aac',
-            temp_audiofile='temp-audio.m4a',
-            remove_temp=True,
-            logger=None  # Silenciar logs en consola
+            audio=False,  # Asegura que no se incluya track de audio
+            logger=None   # Silenciar logs
         )
         
         # Cerrar clips para liberar recursos
