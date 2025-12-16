@@ -45,7 +45,7 @@ def generate_with_gemini(image_path: str, character: str, output_video_path: str
     (El nombre de la función se mantiene por compatibilidad).
     """
     base_prompt = PROMPTS.get(character, PROMPTS['look_man'])
-    video_prompt = f"Cinematic slow motion shot. {base_prompt}"
+    video_prompt = f"Keep the same style and mood of the reference photo.{base_prompt}"
 
     print("Iniciando generación de video con Replicate (Gen-4 Turbo)...")
 
