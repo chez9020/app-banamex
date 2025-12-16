@@ -60,7 +60,8 @@ def generate_with_gemini(image_path: str, character: str, output_video_path: str
                     "prompt": video_prompt,
                     "duration": 6,
                     "aspect_ratio": "9:16",
-                    "resolution": "720p"
+                    "resolution": "720p",
+                    "generate_audio": False
                 }
             )
         
