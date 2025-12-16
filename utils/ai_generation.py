@@ -32,7 +32,8 @@ PROMPTS = {
     'look_man': """
     Professional video footage of a male singer performing on a stage, 1980s style.
     SUBJECT: The man from the reference photo.
-    IDENTITY: Keep the face exactly as the reference photo.
+    IDENTITY: Keep the face exactly as the reference photo. Natural skin look.
+    FACE: No makeup, natural skin texture, fresh face, masculine features. No eyeliner, no blush.
     OUTFIT: He is wearing a shiny silver stage costume and a jacket with decorative elements.
     HAIR: Voluminous 1980s hairstyle.
     ACTION: He is standing on a stage holding a microphone, singing with passion.
