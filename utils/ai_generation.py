@@ -19,22 +19,23 @@ load_dotenv()
 # client = genai.Client(api_key=API_KEY)
 
 PROMPTS = {
-    'look_woman': """Full-body 1980s rock diva on stage, inspired by., 
-    based on the reference photo (same face, same bone structure, same eyes, same mouth, same nose, same body type, same proportions, same pose and expression).
-    Hair: messy, voluminous, wild 80s hair with textured spiky layers.
-    Makeup: bold stage makeup, heavy blush, metallic eyeshadow, glossy red lipstick.
-    Wardrobe: silver sequined mini-dress with fringe details, fishnet stockings, high heels, matching bracelets.
-    Pose: standing front-facing with legs apart, holding microphone in one hand, the other arm raised pointing upward (same pose as reference).
-    Lighting: dramatic warm concert stage lighting with orange, gold, and red tones, backlights and spotlights behind, slight lens flare.
-    Background: live band, stage risers, glowing bulbs and stage light structures.
-    Photography: high-detail realism, slightly sweaty skin glow, cinematic depth, 1980s analog film grain, crisp highlights.
-    Strong energetic performance vibe.
+    'look_woman': """
+    High-fidelity cinematic 1980s music video footage shot on vintage 35mm film.
+    SUBJECT: The woman from the reference photo performing as a legendary 80s Powerhouse Rock Diva.
+    IDENTITY LOCK: It is critical to preserve the exact facial features, bone structure, and expression of the provided reference image. Do not change the face.
+    HAIR: Massive, wild, voluminous, textured "lion mane" hairstyle typical of 1980s rock icons. Spiky and layered.
+    WARDROBE: A sparkling silver sequined mini-dress covered in long, dynamic fringe layers that swing and sway with movement. Fishnet stockings and high heels.
+    ACTION: She stands in a wide, energetic power stance on a concert stage, holding a microphone. Strong, fierce attitude. The fringe on her dress is moving dynamically.
+    LIGHTING & ATMOSPHERE: Hazy, smoky stage with dramatic warm backlighting (orange and gold spotlights) creating a rim-light silhouette. Lens flares, slightly sweaty glowing skin, cinematic grain.
     """,
-    'look_man': """Cinematic 1980s concert footage. A male rock icon energy, performing live on a smoky stage. 
-    He has wild, messy, voluminous blonde spiky hair teased high and sweaty glowing skin. 
-    He is wearing a silver sequined open vest with long fringe swinging dynamically, over a shredded mesh tank top, tight distressed leather pants with fishnet cutouts, and chunky platform boots.
-    He holds a power stance, legs apart, gripping the microphone intensely, one arm raised high pointing upward. Heavy distinct 80s makeup, guyliner, metallic eyeshadow. Dramatic warm stage lighting, orange and gold spotlights, strong rim light, lens flares.
-    Background of shadowy musicians and industrial trusses. Shot on 35mm film, grainy vintage texture, handheld camera movement, slow motion, high fidelity, energetic performance atmosphere.
+    'look_man': """
+    Cinematic 1980s concert footage, raw and energetic style.
+    SUBJECT: The man from the reference photo performing as an 80s Glam Rock Soul Icon.
+    IDENTITY LOCK: Maintain absolute facial resemblance to the reference image. Keep the user's natural skin tone and facial structure intact.
+    HAIR: Wild, teased, gravity-defying 80s spiky hair with volume. Sweaty and textured.
+    WARDROBE: A glittering silver open vest (sequins or chainmail) with hanging fringe details, worn over a shredded mesh tank top. Tight distressed leather pants or acid-wash denim.
+    ACTION: Intense performance energy. He holds the microphone stand aggressively with legs apart in a power squat stance. Raw rock energy.
+    LIGHTING & ATMOSPHERE: High-contrast stage lighting with beams of light cutting through stage fog. Golden and amber tones. Volumetric lighting, 35mm film grain, handheld camera shake for realism.
     """
 }
 
