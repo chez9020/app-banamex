@@ -30,14 +30,13 @@ PROMPTS = {
     STYLE: Retro analog video texture, 35mm film grain, energetic performance atmosphere.
     """,
     'look_man': """
-    Cinematic 80s concert footage.
-    SUBJECT: The man from the reference photo performing as a energetic 80s rock musician.
-    IDENTITY: Keep the facial features strictly identical to the reference photo.
-    HAIR: Textured, voluminous, spiked 80s hairstyle.
-    OUTFIT: A metallic silver sleeveless jacket with dynamic fringe details, wearing a dark textured concert shirt underneath.
-    VIBE: He is holding a microphone stand on a concert stage with dynamic lighting.
-    LIGHTING: Dramatic stage backlighting, beams of gold and orange light, silhouette effect.
-    STYLE: Retro video aesthetic, 35mm film grain, atmospheric smoke.
+    Professional video footage of a male singer performing on a stage, 1980s style.
+    SUBJECT: The man from the reference photo.
+    IDENTITY: Keep the face exactly as the reference photo.
+    OUTFIT: He is wearing a shiny silver stage costume and a jacket with decorative elements.
+    HAIR: Voluminous 1980s hairstyle.
+    ACTION: He is standing on a stage holding a microphone, singing with passion.
+    ATMOSPHERE: Concert lighting with fog, warm colors, vintage video quality.
     """
 }
 
