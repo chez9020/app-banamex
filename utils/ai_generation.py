@@ -29,16 +29,15 @@ PROMPTS = {
     LIGHTING: Golden and orange dramatic stage backlighting, silhouette effect, lens flares, atmospheric smoke.
     STYLE: Retro analog video texture, 35mm film grain, energetic performance atmosphere.
     """,
-
     'look_man': """
     Cinematic 80s concert footage.
-    SUBJECT: The man from the reference photo performing as a glam rock icon.
+    SUBJECT: The man from the reference photo performing as a energetic 80s rock musician.
     IDENTITY: Keep the facial features strictly identical to the reference photo.
-    HAIR: Spiky, textured, voluminous 80s hairstyle.
-    OUTFIT: Silver metallic open vest with fringe details, mesh texture shirt, rock star pants.
-    VIBE: Powerful stance holding a microphone stand, energetic concert performance.
-    LIGHTING: High contrast stage lights, beams of light cutting through fog, warm amber tones.
-    STYLE: Vintage 35mm film look, grainy texture, handheld camera feel.
+    HAIR: Textured, voluminous, spiked 80s hairstyle.
+    OUTFIT: A metallic silver sleeveless jacket with dynamic fringe details, wearing a dark textured concert shirt underneath.
+    VIBE: He is holding a microphone stand on a concert stage with dynamic lighting.
+    LIGHTING: Dramatic stage backlighting, beams of gold and orange light, silhouette effect.
+    STYLE: Retro video aesthetic, 35mm film grain, atmospheric smoke.
     """
 }
 
