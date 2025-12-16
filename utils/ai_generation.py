@@ -20,22 +20,25 @@ load_dotenv()
 
 PROMPTS = {
     'look_woman': """
-    High-fidelity cinematic 1980s music video footage shot on vintage 35mm film.
-    SUBJECT: The woman from the reference photo performing as a legendary 80s Powerhouse Rock Diva.
-    IDENTITY LOCK: It is critical to preserve the exact facial features, bone structure, and expression of the provided reference image. Do not change the face.
-    HAIR: Massive, wild, voluminous, textured "lion mane" hairstyle typical of 1980s rock icons. Spiky and layered.
-    WARDROBE: A sparkling silver sequined mini-dress covered in long, dynamic fringe layers that swing and sway with movement. Fishnet stockings and high heels.
-    ACTION: She stands in a wide, energetic power stance on a concert stage, holding a microphone. Strong, fierce attitude. The fringe on her dress is moving dynamically.
-    LIGHTING & ATMOSPHERE: Hazy, smoky stage with dramatic warm backlighting (orange and gold spotlights) creating a rim-light silhouette. Lens flares, slightly sweaty glowing skin, cinematic grain.
+    Cinematic 80s concert footage. 
+    SUBJECT: The woman from the reference photo performing as a high-energy 80s rock vocalist.
+    IDENTITY: Keep the facial features strictly identical to the reference photo.
+    HAIR: Big, voluminous, textured, wild 80s lion-mane hairstyle.
+    OUTFIT: A sparkling silver sequined performance dress with dynamic fringe layers that move with her. 
+    VIBE: She stands on a concert stage holding a microphone with intense energy.
+    LIGHTING: Golden and orange dramatic stage backlighting, silhouette effect, lens flares, atmospheric smoke.
+    STYLE: Retro analog video texture, 35mm film grain, energetic performance atmosphere.
     """,
+
     'look_man': """
-    Cinematic 1980s concert footage, raw and energetic style.
-    SUBJECT: The man from the reference photo performing as an 80s Glam Rock Soul Icon.
-    IDENTITY LOCK: Maintain absolute facial resemblance to the reference image. Keep the user's natural skin tone and facial structure intact.
-    HAIR: Wild, teased, gravity-defying 80s spiky hair with volume. Sweaty and textured.
-    WARDROBE: A glittering silver open vest (sequins or chainmail) with hanging fringe details, worn over a shredded mesh tank top. Tight distressed leather pants or acid-wash denim.
-    ACTION: Intense performance energy. He holds the microphone stand aggressively with legs apart in a power squat stance. Raw rock energy.
-    LIGHTING & ATMOSPHERE: High-contrast stage lighting with beams of light cutting through stage fog. Golden and amber tones. Volumetric lighting, 35mm film grain, handheld camera shake for realism.
+    Cinematic 80s concert footage.
+    SUBJECT: The man from the reference photo performing as a glam rock icon.
+    IDENTITY: Keep the facial features strictly identical to the reference photo.
+    HAIR: Spiky, textured, voluminous 80s hairstyle.
+    OUTFIT: Silver metallic open vest with fringe details, mesh texture shirt, rock star pants.
+    VIBE: Powerful stance holding a microphone stand, energetic concert performance.
+    LIGHTING: High contrast stage lights, beams of light cutting through fog, warm amber tones.
+    STYLE: Vintage 35mm film look, grainy texture, handheld camera feel.
     """
 }
 
